@@ -4,15 +4,6 @@ open import Level
 open import Relation.Binary
 open import Relation.Binary.PropositionalEquality
 
--- record Purpose : Set₁ where
---     field
---         Label : Set
---         ⊥ : Label
---         _⊑_ : Label → Label → Set
---         _◦_ : Label → Label → Label
---         ⊑-refl  : Reflexive _⊑_
---         ⊑-trans : Transitive _⊑_
-
 record Purpose : Set₁ where
     field
         Label : Set
