@@ -2,7 +2,6 @@ open import Purpose
 module Type (p : Purpose) where
 
 open import Relation.Nullary
-open import GMonad p
 open Purpose.Purpose p public
 
 infixr 10 _⇒_
