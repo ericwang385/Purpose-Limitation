@@ -1,8 +1,8 @@
 open import Purpose
 
-module Context (l : Purpose) where
+module Context (p : Purpose) where
 
-open import Type l
+open import Type p
 open import Data.List using (List ; [] ; _∷_) public
 
 infixl 5 _,_

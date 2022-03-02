@@ -1,14 +1,13 @@
 open import Purpose
-module Type (l : Purpose) where
+module Type (p : Purpose) where
 
-open import Relation.Nullary public
-
-open Purpose.Purpose l public
+open import Relation.Nullary
+open import GMonad p
+open Purpose.Purpose p public
 
 infixr 10 _⇒_
 
 data Type : Set where
-    Nil  : Type
     Nat  : Type
     Bool : Type
     _⇒_  : (a b : Type) → Type
