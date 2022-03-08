@@ -1,35 +1,32 @@
-open import Purpose 
+open import Relation.Binary.Lattice using (BoundedJoinSemilattice)
 
-module GMonad (p : Purpose) where
+module GMonad {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) where
 
-open Purpose.Purpose p
+open import Purpose J
+open import Relation.Binary.Properties.BoundedJoinSemilattice J
+open import Variable J
 
-variable
-    A B : Set
-    l l₁ l₂ : Label
 
-record Functor (F : Label → Set → Set) : Set₁ where
+record Functor (F : Set → Set) : Set₁ where
     field
-        fmap : (A → B) → F l A → F l B
+        fmap : (A → B) → F A → F B
     _<$>_ = fmap
     infixl 4 _<$>_
 
-record Applicative (F : Label → Set → Set) : Set₁ where
-    field
-        pure : A → F l A -- not sure
-        _<*>_ : F l (A → B) → F l A → F l B
-        functor : Functor F
-    infixl 4 _<*>_
-
-record GMonad (M : Label → Set → Set) : Set₁ where
+record GMonad (M : Label → Set → Set) : Set (lsuc (c l⊔ ℓ₂)) where
     field
         return : A → M ⊥ A 
-        _>>=_ : M l₁ A → (A → M l₂ B) → M (l₁ ◦ l₂) B
-        applicative : Applicative M
+        _>>=_ : M l₁ A → (A → M l₂ B) → M (l₁ ∘ l₂) B
+        sub : l₁ ⊑ l₂ → M l₁ A → M l₂ A
+        functor : Functor (M l)
 
-    join : (M l₁ (M l₂ A)) → M (l₁ ◦ l₂) A
+    join : (M l₁ (M l₂ A)) → M (l₁ ∘ l₂) A
     join ma = ma >>= λ x → x
 
-    _>>_ : ∀ {A B} → M l₁ A → M l₂ B → M (l₁ ◦ l₂) B 
+    fmap : (A → B) → M l₁ A → M l₁ B 
+    fmap f ma = Functor.fmap functor f ma
+    -- fmap {l₁} f ma = sub (⊑-reflexive (identityʳ l₁)) (ma >>= λ x → return (f x))
+
+    _>>_ : M l₁ A → M l₂ B → M (l₁ ∘ l₂) B 
     ma >> mb = ma >>= λ a → mb
- 
+  
