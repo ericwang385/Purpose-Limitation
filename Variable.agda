@@ -1,10 +1,13 @@
-open import Purpose
-module Variable (l : Purpose) where
+open import Relation.Binary.Lattice using (BoundedJoinSemilattice)
 
-open import Type l
-open import Context l
+module Variable {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) where
 
-infix  4 _∋_
-data _∋_ : Ctx → Type → Set where
-    Z  : ∀ {Γ A} → Γ , A ∋ A
-    S_ : ∀ {Γ A B} → Γ ∋ A → Γ , B ∋ A
+open import Type J
+open import Context J
+open import Purpose J
+
+variable
+    Γ : Ctx
+    A B : Set
+    a b : Type
+    l l₁ l₂ : Label

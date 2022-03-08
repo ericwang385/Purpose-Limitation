@@ -1,12 +1,12 @@
-open import Purpose
-module Type (p : Purpose) where
+open import Relation.Binary.Lattice using (BoundedJoinSemilattice)
 
-open import Relation.Nullary
-open Purpose.Purpose p public
+module Type {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) where
+
+open import Purpose J
 
 infixr 10 _⇒_
 
-data Type : Set where
+data Type : Set c where
     Nat  : Type
     Bool : Type
     _⇒_  : (a b : Type) → Type

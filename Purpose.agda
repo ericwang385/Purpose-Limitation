@@ -1,21 +1,35 @@
-module Purpose where
+open import Relation.Binary.Lattice using (BoundedJoinSemilattice)
 
-open import Level
-open import Relation.Binary
-open import Relation.Binary.PropositionalEquality
+module Purpose {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) where
 
-record Purpose : Set₁ where
-    field
-        Label : Set
-        ⊥ : Label
-        ⊤ : Label
-        _◦_ : Label → Label → Label
+open import Level public renaming (suc to lsuc; _⊔_ to _l⊔_)
+open import Relation.Nullary using (¬_)
 
-        _⊑_ : Label → Label → Set
-        ⊑-refl  : Reflexive _⊑_
-        ⊑-trans : Transitive _⊑_
 
-        r-id : {l : Label} → l ◦ ⊥ ≡ l
-        l-id : {l : Label} → ⊥ ◦ l ≡ l
-        assoc : {l₁ l₂ l₃ : Label} → l₁ ◦ (l₂ ◦ l₃) ≡ (l₁ ◦ l₂) ◦ l₃
- 
+open BoundedJoinSemilattice J using (⊥) public renaming (
+    Carrier       to Label
+  ; _≈_           to _≃_
+  ; _≤_           to _⊑_
+  ; _∨_           to _∘_
+  ; refl          to ⊑-refl
+  ; reflexive     to ⊑-reflexive
+  ; trans         to ⊑-trans 
+  ; minimum       to ⊑-minimum 
+  ; antisym       to ⊑-antisym
+  )
+
+
+_⋢_ : Label → Label → Set ℓ₂
+t ⋢ u = ¬ (t ⊑ u)
+
+
+-- ⊑-neg : ∀ {A B} → A ⊑ B → B ⋢ A
+-- ⊑-neg {x} {y} x⊑y y⊑x = {!   !}
+
+⊥-⊑ᵣ : ∀ {A} → ⊥ ⊑ A
+⊥-⊑ᵣ {A} = ⊑-minimum A
+
+-- ⊥-⊑ₗ : ∀ {A} → Dec (A ⊑ ⊥)
+-- ⊥-⊑ₗ {A} with Dec (A ≡ ⊥)
+-- ...   | yes = {!   !}
+-- ...   | no = {!   !}
