@@ -18,7 +18,7 @@ data _⊢_ (Γ : Ctx) : Type → Set (c l⊔ ℓ₂) where
     var_          : Γ ∋ a → Γ ⊢ a                
     ƛ_            : Γ , a ⊢ b → Γ ⊢ (a ⇒ b)
     _•_           : Γ ⊢ (a ⇒ b) → Γ ⊢ a → Γ ⊢ b
-    _+_           : Γ ⊢ Nat → Γ ⊢ Nat → Γ ⊢ Nat
+    plus          : Γ ⊢ Nat → Γ ⊢ Nat → Γ ⊢ Nat
     If_Then_Else_ : Γ ⊢ Bool → Γ ⊢ a → Γ ⊢ a → Γ ⊢ a
 
     η_            : Γ ⊢ a → Γ ⊢ ⟨ ⊥ ⟩ a  

@@ -11,7 +11,7 @@ open import Term J
 open import Type J
 open GMonad.GMonad G
 
-open import Agda.Builtin.Nat using () renaming (Nat to ℕ)
+open import Agda.Builtin.Nat using (_+_) renaming (Nat to ℕ)
 open import Agda.Builtin.Bool using () renaming (Bool to 𝔹)
 
 Value : Type → Set
@@ -37,7 +37,7 @@ eval (lit n) ρ      = n
 eval (var x) ρ      = lookupVar ρ x
 eval (ƛ x) ρ        = λ y → eval x (ρ , y)
 eval (f • x) ρ      = eval f ρ (eval x ρ)
-eval (x + y) ρ      = Agda.Builtin.Nat._+_ (eval x ρ) (eval y ρ) 
+eval (plus x y) ρ   = (eval x ρ) + (eval y ρ) 
 eval (If cond Then e1 Else e2) ρ with (eval cond ρ)
 ...       | 𝔹.true  = eval e1 ρ
 ...       | 𝔹.false = eval e2 ρ
