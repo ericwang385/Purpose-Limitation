@@ -13,7 +13,7 @@ data _⊢_ (Γ : Ctx) : Type → Set (c l⊔ ℓ₂) where
     true          : Γ ⊢ Bool
     false         : Γ ⊢ Bool
     lit           : ℕ → Γ ⊢ Nat
-    case_of_      : Γ ⊢ Nat → Γ ⊢ a → Γ , Nat ⊢ a → Γ ⊢ a
+    --case_of_[zero=>_|suc_=>_]      : Γ ⊢ a → Γ ⊢ a → Γ ⊢ Nat → Γ ⊢ a → Γ ⊢ a
 
     var_          : Γ ∋ a → Γ ⊢ a                
     ƛ_            : Γ , a ⊢ b → Γ ⊢ (a ⇒ b)
@@ -24,5 +24,5 @@ data _⊢_ (Γ : Ctx) : Type → Set (c l⊔ ℓ₂) where
     η_            : Γ ⊢ a → Γ ⊢ ⟨ ⊥ ⟩ a  
     _↑_           : l₁ ⊑ l₂ → Γ ⊢ ⟨ l₁ ⟩ a → Γ ⊢ ⟨ l₂ ⟩ a
     label         : (l : Label) → Γ ⊢ a → Γ ⊢ (⟨ l ⟩ a)
-    unlabel       : Γ ⊢ (⟨ ⊥ ⟩ a) → Γ ⊢ a 
-    Let_⇐_In_     : Γ ⊢ (⟨ l₁ ⟩ a) → Γ , a ⊢ (a ⇒ ⟨ l₂ ⟩ b) → Γ ⊢ ⟨ l₁ ∘ l₂ ⟩ b 
+    -- unlabel       : Γ ⊢ (⟨ ⊥ ⟩ a) → Γ ⊢ a 
+    Let_⇐_In_     : Γ ⊢ a → Γ ⊢ (⟨ l₁ ⟩ a) → Γ , a ⊢ (a ⇒ ⟨ l₂ ⟩ b) → Γ ⊢ ⟨ l₁ ∘ l₂ ⟩ b 
