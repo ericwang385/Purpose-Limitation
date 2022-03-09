@@ -22,7 +22,6 @@ open BoundedJoinSemilattice J using (⊥) public renaming (
 _⋢_ : Label → Label → Set ℓ₂
 t ⋢ u = ¬ (t ⊑ u)
 
-
 -- ⊑-neg : ∀ {A B} → A ⊑ B → B ⋢ A
 -- ⊑-neg {x} {y} x⊑y y⊑x = {!   !}
 

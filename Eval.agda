@@ -1,31 +1,48 @@
-open import Purpose 
+open import Relation.Binary.Lattice using (BoundedJoinSemilattice)
+open import GMonad
 
-module Eval (p : Purpose) where
+module Eval {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) (M : BoundedJoinSemilattice.Carrier J → Set → Set) (G : GMonad J M) where
 
-open import Agda.Builtin.Nat renaming (Nat to ℕ)
-open import Agda.Builtin.Bool renaming (Bool to 𝔹)
-open import Variable p
-open import Context p
-open import Term p
-open import Type p
+
+open import Variable J
+open import Context J
+open import Purpose J
+open import Term J
+open import Type J
+
+open import Agda.Builtin.Nat using () renaming (Nat to ℕ)
+open import Agda.Builtin.Bool using () renaming (Bool to 𝔹)
 
 Value : Type → Set
-Value Nat = ℕ
-Value Bool = 𝔹
-Value (A ⇒ B) = Value A → Value B
-Value (⟨ l ⟩ A) = Value A
+Value Nat       = ℕ
+Value Bool      = 𝔹
+Value (a ⇒ b)   = Value a → Value b
+Value (⟨ l ⟩ a) = M l (Value a)
 
 data Env : Ctx → Set where
-    ∅ : Env ∅
+    ∅   : Env ∅
     _,_ : Env Γ → Value a → Env (Γ , a)
 
 lookupVar : Env Γ → Γ ∋ a → Value a 
-lookupVar (ρ , v) Z = v
+lookupVar (ρ , v) Z     = v
 lookupVar (ρ , v) (S x) = lookupVar ρ x 
 
 eval : Γ ⊢ a → Env Γ → Value a
-eval true ρ = true
-eval false ρ = false
-eval zero ρ = zero
-eval suc ρ = suc
-eval x ρ = {!   !}
+eval true ρ         = 𝔹.true
+eval false ρ        = 𝔹.false
+eval (lit n) ρ      = n 
+-- eval (case x of [zero=> expr1|suc n => expr2]) ρ = {!   !}
+
+eval (var x) ρ      = lookupVar ρ x
+eval (ƛ x) ρ        = λ y → eval x (ρ , y)
+eval (f • x) ρ      = eval f ρ (eval x ρ)
+eval (x + y) ρ      = Agda.Builtin.Nat._+_ (eval x ρ) (eval y ρ) 
+eval (If cond Then e1 Else e2) ρ with (eval cond ρ)
+...       | 𝔹.true  = eval e1 ρ
+...       | 𝔹.false = eval e2 ρ
+
+eval (η x) ρ        = GMonad.return G (eval x ρ)
+eval (flow ↑ x) ρ   = GMonad.sub G flow (eval x ρ)
+eval (label l x) ρ  = GMonad.sub G ⊥-⊑ᵣ (GMonad.return G (eval x ρ))
+eval (Let a ⇐ ma In mb) ρ = (G GMonad.>>= eval ma ρ) (eval mb (ρ , (eval a ρ)))
+    
