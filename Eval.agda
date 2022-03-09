@@ -1,5 +1,5 @@
 open import Relation.Binary.Lattice using (BoundedJoinSemilattice)
-open import GMonad
+open import GMonad using (GMonad)
 
 module Eval {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) (M : BoundedJoinSemilattice.Carrier J → Set → Set) (G : GMonad J M) where
 
@@ -9,6 +9,7 @@ open import Context J
 open import Purpose J
 open import Term J
 open import Type J
+open GMonad.GMonad G
 
 open import Agda.Builtin.Nat using () renaming (Nat to ℕ)
 open import Agda.Builtin.Bool using () renaming (Bool to 𝔹)
@@ -41,8 +42,7 @@ eval (If cond Then e1 Else e2) ρ with (eval cond ρ)
 ...       | 𝔹.true  = eval e1 ρ
 ...       | 𝔹.false = eval e2 ρ
 
-eval (η x) ρ        = GMonad.return G (eval x ρ)
-eval (flow ↑ x) ρ   = GMonad.sub G flow (eval x ρ)
-eval (label l x) ρ  = GMonad.sub G ⊥-⊑ᵣ (GMonad.return G (eval x ρ))
-eval (Let a ⇐ ma In mb) ρ = (G GMonad.>>= eval ma ρ) (eval mb (ρ , (eval a ρ)))
-    
+eval (η x) ρ        = return (eval x ρ)
+eval (flow ↑ x) ρ   = sub flow (eval x ρ)
+eval (label l x) ρ  = sub ⊥-⊑ᵣ (return (eval x ρ))
+eval (Let a ⇐ ma In mb) ρ = (eval ma ρ) >>= (eval mb (ρ , (eval a ρ)))
