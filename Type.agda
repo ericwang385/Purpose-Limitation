@@ -7,6 +7,7 @@ open import Purpose J
 infixr 10 _⇒_
 
 data Type : Set c where
+    Unit : Type
     Nat  : Type
     Bool : Type
     _⇒_  : (a b : Type) → Type
