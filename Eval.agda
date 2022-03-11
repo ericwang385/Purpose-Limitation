@@ -1,15 +1,14 @@
 open import Relation.Binary.Lattice using (BoundedJoinSemilattice)
-open import GMonad using (GMonad)
+open import Data.GMonad.Base using (GMonad)
 
-module Eval {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) (M : BoundedJoinSemilattice.Carrier J → Set → Set) (G : GMonad J M) where
-
+module Eval {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) (G : GMonad J) where
 
 open import Variable J
 open import Context J
 open import Purpose J
 open import Term J
 open import Type J
-open GMonad.GMonad G
+open GMonad G
 
 open import Agda.Builtin.Nat using (_+_) renaming (Nat to ℕ)
 open import Agda.Builtin.Bool using () renaming (Bool to 𝔹)
