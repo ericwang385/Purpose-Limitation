@@ -14,7 +14,7 @@ data _⊢_ (Γ : Ctx) : Type → Set (c l⊔ ℓ₂) where
     true          : Γ ⊢ Bool
     false         : Γ ⊢ Bool
     lit           : ℕ → Γ ⊢ Nat
-    --case_of[zero=>_|suc=>_]      : Γ ⊢ Nat → Γ ⊢ a → Γ , Nat ⊢ a → Γ ⊢ a
+    case_of[zero⇒_|suc⇒_]      : Γ ⊢ Nat → Γ ⊢ a → Γ , Nat ⊢ a → Γ ⊢ a
 
     var_          : Γ ∋ a → Γ ⊢ a                
     ƛ_            : Γ , a ⊢ b → Γ ⊢ (a ⇒ b)

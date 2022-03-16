@@ -12,10 +12,12 @@ open GMonad G
 
 open import Agda.Builtin.Nat using (_+_) renaming (Nat to ℕ)
 open import Agda.Builtin.Bool using () renaming (Bool to 𝔹)
+open import Agda.Builtin.Unit
 
 Value : Type → Set
 Value Nat       = ℕ
 Value Bool      = 𝔹
+Value Unit      = ⊤
 Value (a ⇒ b)   = Value a → Value b
 Value (⟨ l ⟩ a) = M l (Value a)
 
@@ -30,8 +32,11 @@ lookupVar (ρ , v) (S x) = lookupVar ρ x
 eval : Γ ⊢ a → Env Γ → Value a
 eval true ρ         = 𝔹.true
 eval false ρ        = 𝔹.false
+eval unit ρ         = tt
 eval (lit n) ρ      = n 
--- eval (case x of [zero=> expr1|suc n => expr2]) ρ = {!   !}
+eval case x of[zero⇒ expr1 |suc⇒ expr2 ] ρ with (eval x ρ)
+...       |  ℕ.zero = eval expr1 ρ
+...       |  ℕ.suc n = eval expr2 (ρ , n)
 
 eval (var x) ρ      = lookupVar ρ x
 eval (ƛ x) ρ        = λ y → eval x (ρ , y)
@@ -44,4 +49,4 @@ eval (If cond Then e1 Else e2) ρ with (eval cond ρ)
 eval (η x) ρ        = return (eval x ρ)
 eval (flow ↑ x) ρ   = sub flow (eval x ρ)
 eval (label l x) ρ  = sub ⊥-⊑ᵣ (return (eval x ρ))
-eval (Let a ⇐ ma In mb) ρ = (eval ma ρ) >>= (eval mb (ρ , (eval a ρ)))
+eval (Let a ⇐ ma In mb) ρ = (eval ma ρ) >>= (eval mb (ρ , (eval a ρ))) 
