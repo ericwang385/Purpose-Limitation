@@ -1,7 +1,8 @@
+{-# OPTIONS --cumulativity #-}
 open import Relation.Binary.Lattice using (BoundedJoinSemilattice)
 open import Data.GMonad.Base using (GMonad)
 
-module Eval {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) (G : GMonad J) where
+module Eval {v c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) (G : GMonad {v} J) where
 
 open import Variable J
 open import Context J
@@ -14,14 +15,14 @@ open import Agda.Builtin.Nat using (_+_) renaming (Nat to ℕ)
 open import Agda.Builtin.Bool using () renaming (Bool to 𝔹)
 open import Agda.Builtin.Unit
 
-Value : Type → Set
+Value : Type → Set v
 Value Nat       = ℕ
 Value Bool      = 𝔹
 Value Unit      = ⊤
 Value (a ⇒ b)   = Value a → Value b
 Value (⟨ l ⟩ a) = M l (Value a)
 
-data Env : Ctx → Set where
+data Env : Ctx → Set v where
     ∅   : Env ∅
     _,_ : Env Γ → Value a → Env (Γ , a)
 
@@ -50,3 +51,4 @@ eval (η x) ρ        = return (eval x ρ)
 eval (flow ↑ x) ρ   = sub flow (eval x ρ)
 eval (label l x) ρ  = sub ⊥-⊑ᵣ (return (eval x ρ))
 eval (Let a ⇐ ma In mb) ρ = (eval ma ρ) >>= (eval mb (ρ , (eval a ρ))) 
+ 

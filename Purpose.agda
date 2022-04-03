@@ -3,10 +3,10 @@ open import Relation.Binary.Lattice using (BoundedJoinSemilattice)
 module Purpose {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) where
 
 open import Level public renaming (suc to lsuc; _⊔_ to _l⊔_)
-open import Relation.Nullary using (¬_)
+open import Relation.Nullary
 
 
-open BoundedJoinSemilattice J using (⊥) public renaming (
+open BoundedJoinSemilattice J public renaming (
     Carrier       to Label
   ; _≈_           to _≃_
   ; _≤_           to _⊑_
@@ -16,14 +16,12 @@ open BoundedJoinSemilattice J using (⊥) public renaming (
   ; trans         to ⊑-trans 
   ; minimum       to ⊑-minimum 
   ; antisym       to ⊑-antisym
+  ; supremum      to ∘-supremum
   )
 
 
 _⋢_ : Label → Label → Set ℓ₂
 t ⋢ u = ¬ (t ⊑ u)
-
--- ⊑-neg : ∀ {A B} → A ⊑ B → B ⋢ A
--- ⊑-neg {x} {y} x⊑y y⊑x = {!   !}
 
 ⊥-⊑ᵣ : ∀ {A} → ⊥ ⊑ A
 ⊥-⊑ᵣ {A} = ⊑-minimum A

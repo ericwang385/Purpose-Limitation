@@ -8,6 +8,5 @@ open import Purpose J
 
 variable
     Γ : Ctx
-    A B C : Set
     a b : Type
     l l₁ l₂ l₃ : Label
