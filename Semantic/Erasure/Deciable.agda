@@ -5,7 +5,7 @@ open import Data.GMonad.Base using (GMonad)
 open import Relation.Nullary
 open BoundedJoinSemilattice using (Carrier ; _≤_)
 
-module Erasure.Deciable {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) 
+module Semantic.Erasure.Deciable {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) 
  (u : Carrier J) (_⊑?_ :(l u : Carrier J) → Dec(_≤_ J l u)) where
 
 open import Variable J

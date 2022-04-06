@@ -2,7 +2,7 @@
 open import Relation.Binary.Lattice using (BoundedJoinSemilattice)
 open BoundedJoinSemilattice using (Carrier)
 
-module Relational.base {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) (u : Carrier J) where
+module Semantic.Relational.Base {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) (u : Carrier J) where
 
 open import Data.GMonad.Base using (GMonad)
 open import Variable J

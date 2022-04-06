@@ -2,7 +2,7 @@
 open import Relation.Binary.Lattice using (BoundedJoinSemilattice)
 open BoundedJoinSemilattice using (Carrier)
 
-module Erasure.base {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) (u : Carrier J) where
+module Semantic.Erasure.Base {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) (u : Carrier J) where
 
 open import Data.GMonad.Base using (GMonad)
 open import Variable J
@@ -11,6 +11,7 @@ open import Purpose J
 open import Term J
 open import Type J
 
+open import Relation.Binary using (Rel; Setoid)
 open import Agda.Builtin.Nat using (_+_) renaming (Nat to ℕ)
 open import Agda.Builtin.Bool using () renaming (Bool to 𝔹)
 open import Agda.Builtin.Unit
@@ -38,3 +39,6 @@ GradedMonad = record{
     sub = sub}
 
 open import Eval J GradedMonad
+
+[_]_~_ : (a : Type) → Rel (Value a) (c l⊔ ℓ₂)
+[_]_~_ = {!   !}
