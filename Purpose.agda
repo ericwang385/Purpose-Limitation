@@ -2,7 +2,7 @@ open import Relation.Binary.Lattice using (BoundedJoinSemilattice)
 
 module Purpose {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) where
 
-open import Level public renaming (suc to lsuc; _⊔_ to _l⊔_)
+open import Level public renaming (suc to lsuc; _⊔_ to _l⊔_ ; zero to lzero)
 open import Relation.Nullary
 
 
