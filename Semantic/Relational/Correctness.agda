@@ -2,17 +2,16 @@
 open import Relation.Binary.Lattice using (BoundedJoinSemilattice)
 open BoundedJoinSemilattice using (Carrier)
 
-module Semantic.Erasure.Correctness {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) (u : Carrier J) where
+module Semantic.Relational.Correctness {c ℓ₁ ℓ₂} (J : BoundedJoinSemilattice c ℓ₁ ℓ₂) (u : Carrier J) where
 
 open import Relation.Binary.PropositionalEquality using (_≢_; _≡_; refl)
+open import Data.Product using (_×_) renaming (_,_ to _,'_)
 open import Agda.Builtin.Nat using (_+_) renaming (Nat to ℕ)
 open import Agda.Builtin.Bool using () renaming (Bool to 𝔹)
-open import Relation.Nullary.Negation using (contradiction)
-open import Relation.Nullary using (¬_)
-open import Data.Product using (_×_) renaming (_,_ to _,'_)
--- open import Data.Nat.Properties using (suc-injective)
 
-open import Semantic.Erasure.Base J u
+
+
+open import Semantic.Relational.Base J u
 open import Eval J GradedMonad
 open import Variable J
 open import Context J renaming (_,_ to _,ᶜ_)
@@ -41,7 +40,7 @@ noninterference {Γ} (case term of[zero⇒ term₁ |suc⇒ term₂ ])
                 e1 e2 enveq with (noninterference {Γ} term e1 e2 enveq)
 ... | p  with (eval term e1) | (eval term e2)
 ...     | ℕ.zero | ℕ.zero = noninterference {Γ} term₁ e1 e2 enveq
-...     | ℕ.suc x | ℕ.suc y = noninterference {Γ ,ᶜ Nat} term₂ (e1 , x) (e2 , y) (enveq ,' (suc-injective {ℓ₂} p))
+...     | ℕ.suc x | ℕ.suc y = noninterference {Γ ,ᶜ Nat} term₂ (e1 , x) (e2 , y) (enveq ,' (suc-injective {lzero} p))
 
 noninterference {Γ} {a ⇒ b} (ƛ term) e1 e2 enveq {x} {y} inputeq
                 = (noninterference {Γ ,ᶜ a} term (e1 , x) (e2 , y) (enveq ,' inputeq))
@@ -58,14 +57,13 @@ noninterference {Γ} (If term Then term₁ Else term₂) e1 e2 enveq
 ...     | 𝔹.true | 𝔹.true = noninterference {Γ} term₁ e1 e2 enveq
 ...     | 𝔹.false | 𝔹.false = noninterference {Γ} term₂ e1 e2 enveq
 
-noninterference {Γ} (η term) e1 e2 enveq = λ x y → noninterference {Γ} term e1 e2 enveq
+noninterference {Γ} (η term) e1 e2 enveq = λ _ → noninterference term e1 e2 enveq
 
-noninterference {Γ} (flow ↑ term) e1 e2 enveq = λ x y → noninterference {Γ} term e1 e2 enveq (⊑-trans flow x) (⊑-trans flow y)
+noninterference {Γ} (flow ↑ term) e1 e2 enveq = λ x → noninterference term e1 e2 enveq (⊑-trans flow x)
 
-noninterference {Γ} (label l term) e1 e2 enveq = λ x y → noninterference {Γ} term e1 e2 enveq
+noninterference {Γ} (label l term) e1 e2 enveq = λ x → noninterference {Γ} term e1 e2 enveq
 
 noninterference {Γ} (Let_⇐_In_ {a} {l₁} {l₂} term term₁ term₂) e1 e2 enveq with (noninterference {Γ} term e1 e2 enveq) | (noninterference {Γ} term₁ e1 e2 enveq)
-... | p | q 
-    = λ x y → noninterference {Γ ,ᶜ a} term₂ (e1 , eval term e1) (e2 , eval term e2) (enveq ,' p) (q (⊑-trans (x≤x∨y l₁ l₂) x) (⊑-trans (x≤x∨y l₁ l₂) y)) (⊑-trans (y≤x∨y l₁ l₂) x) ((⊑-trans (y≤x∨y l₁ l₂) y))
-
-    
+... | p | q = λ x →
+        noninterference {Γ ,ᶜ a} term₂ (e1 , eval term e1) (e2 , eval term e2) (enveq ,' p)
+        (q (⊑-trans (x≤x∨y l₁ l₂) x)) (⊑-trans (y≤x∨y l₁ l₂) x)

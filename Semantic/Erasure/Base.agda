@@ -13,14 +13,11 @@ open import Type J
 
 open import Data.Product using (_×_)
 open import Relation.Binary.PropositionalEquality using (_≡_)
-open import Relation.Binary using (Rel; Setoid)
-open import Agda.Builtin.Nat using (_+_) renaming (Nat to ℕ)
-open import Agda.Builtin.Bool using () renaming (Bool to 𝔹)
+open import Relation.Binary using (Rel)
 open import Agda.Builtin.Unit
 
 variable
     A B : Set ℓ₂
-
 
 M : Label → Set ℓ₂ → Set ℓ₂
 M l a = l ⊑ u → a
@@ -38,14 +35,10 @@ GradedMonad : GMonad {ℓ₂} J
 GradedMonad = record{
     M = M ;
     return = return ;
-    _>>=_ = _>>=_ ;
+    _>>=_ = _>>=_;
     sub = sub}
 
 open import Eval {ℓ₂} J GradedMonad
-
--- Term Equality
--- data _≈_ {a : Type} {l : Label} (x y : Value a) : Set (c l⊔ ℓ₂) where
---     T-≡ : M l x ≡ M l y → x ≈ y
 
 [_]_~_ : (a : Type) → Rel (Value a) ℓ₂
 [ ⟨ l₁ ⟩ t ] mx ~ my =  ∀ (x y : l₁ ⊑ u) → [ t ] mx x ~ my y
