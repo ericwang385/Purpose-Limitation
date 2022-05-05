@@ -16,32 +16,6 @@ open import Relation.Binary.PropositionalEquality using (_≡_)
 open import Relation.Binary using (Rel)
 open import Agda.Builtin.Unit
 
-
-
-variable 
-    A B : Set
-
-M : Label → Set → Set
-M _ a = a
-
-return : A → M ⊥ A
-return a = a
-
-sub : l₁ ⊑ l₂ → M l₁ A → M l₂ A
-sub flow ma = ma
-
-_>>=_ : M l₁ A → (A → M l₂ B) → M (l₁ ∘ l₂) B
-_>>=_ ma f = f ma
-
--- GradedMonad : GMonad {lzero} J 
--- GradedMonad = record{
---     M = M;
---     return = return;
---     _>>=_ = _>>=_;
---     sub = sub;
--- }
-
-
 GradedMonad : GMonad {lzero} J
 GradedMonad = record{
     M = λ _ z → z ;
