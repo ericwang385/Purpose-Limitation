@@ -13,3 +13,4 @@ data Type : Set c where
     _⇒_  : (a b : Type) → Type
     -- Labeled data with purpose
     ⟨_⟩_ : Label → Type → Type
+    IO⟨_⟩_ : Label → Type → Type
