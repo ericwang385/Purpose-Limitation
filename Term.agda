@@ -51,4 +51,4 @@ data _⊢_ (Γ : Ctx) : Type → Set (c l⊔ ℓ₂ l⊔ v) where
     Let_⇐_In_     : Γ ⊢ a → Γ ⊢ (⟨ l₁ ⟩ a) → Γ , a ⊢ (a ⇒ ⟨ l₂ ⟩ b) → Γ ⊢ ⟨ l₁ ∘ l₂ ⟩ b 
 
     -- read_      : Γ ⊢ IO⟨ l ⟩ a → Γ  ⊢ ⟨ l ⟩ a 
-    write         : Γ ⊢ ⟨ l ⟩ a → IOStream l a → Γ ⊢ IO⟨ l ⟩ a  
+    write         : Γ ⊢ ⟨ l₁ ⟩ a → IOStream l₂ a → l₁ ⊑ l₂ → Γ ⊢ IO⟨ l₂ ⟩ a  
