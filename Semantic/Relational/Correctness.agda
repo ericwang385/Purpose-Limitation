@@ -8,15 +8,14 @@ open import Relation.Binary.PropositionalEquality using (_≢_; _≡_; refl)
 open import Data.Product using (_×_) renaming (_,_ to _,'_)
 open import Agda.Builtin.Nat using (_+_) renaming (Nat to ℕ)
 open import Agda.Builtin.Bool using () renaming (Bool to 𝔹)
-
-
+open import Data.List
 
 open import Semantic.Relational.Base J u
 open import Eval J GradedMonad
+open import Term J GradedMonad
 open import Variable J
 open import Context J renaming (_,_ to _,ᶜ_)
 open import Purpose J
-open import Term J
 open import Type J
 
 suc-injective : {ℓ : Level} {x y : ℕ} → _≡_ {ℓ} (ℕ.suc x) (ℕ.suc y) → _≡_ {ℓ} x y
@@ -68,4 +67,7 @@ noninterference {Γ} (Let_⇐_In_ {a} {l₁} {l₂} term term₁ term₂) e1 e2 
         noninterference {Γ ,ᶜ a} term₂ (e1 , eval term e1) (e2 , eval term e2) (enveq ,' p)
         (q (⊑-trans (x≤x∨y l₁ l₂) x)) (⊑-trans (y≤x∨y l₁ l₂) x)
 
-noninterference {Γ} (write term) e1 e2 enveq = λ x → (noninterference {Γ} term e1 e2 enveq) x
+noninterference {Γ} (write term []) e1 e2 enveq = λ _ _ → refl
+
+noninterference {Γ} (write term (p ∷ ps)) e1 e2 enveq 
+    = λ x termeq → λ y yeq → {! noninterference {Γ} (write term ps) e1 e2 enveq   !}

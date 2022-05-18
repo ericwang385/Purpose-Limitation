@@ -14,10 +14,10 @@ open import Data.List
 
 open import Semantic.Erasure.Base J u
 open import Eval J GradedMonad
+open import Term J GradedMonad
 open import Variable J
 open import Context J renaming (_,_ to _,ᶜ_)
 open import Purpose J
-open import Term J GradedMonad
 open import Type J
 
 suc-injective : {ℓ : Level} {x y : ℕ} → _≡_ {ℓ} (ℕ.suc x) (ℕ.suc y) → _≡_ {ℓ} x y
@@ -68,7 +68,7 @@ noninterference {Γ} (Let_⇐_In_ {a} {l₁} {l₂} term term₁ term₂) e1 e2 
 ... | p | q 
     = λ x y → noninterference {Γ ,ᶜ a} term₂ (e1 , eval term e1) (e2 , eval term e2) (enveq ,' p) (q (⊑-trans (x≤x∨y l₁ l₂) x) (⊑-trans (x≤x∨y l₁ l₂) y)) (⊑-trans (y≤x∨y l₁ l₂) x) ((⊑-trans (y≤x∨y l₁ l₂) y))
 
-noninterference {Γ} (write term []) e1 e2 enveq = λ x y termeq → refl
+noninterference {Γ} (write term [] flow) e1 e2 enveq = λ _ _ _ → refl
 
-noninterference {Γ} (write term (x ∷ xs)) e1 e2 enveq 
-    = λ x y termeq → λ x' y' xeq → noninterference {Γ} (write term xs) e1 e2 enveq x y termeq
+noninterference {Γ} (write term (p ∷ ps) flow) e1 e2 enveq 
+    = λ x y termeq → λ _ _ _ → noninterference {Γ} (write term ps flow) e1 e2 enveq x y termeq
