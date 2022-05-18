@@ -28,7 +28,8 @@ open import Term {lzero} J GradedMonad
 
 [_]_~_ : (a : Type) → Rel (Value a) ℓ₂
 [ ⟨ l₁ ⟩ t ] x ~ y = l₁ ⊑ u  → [ t ] x ~ y
-[ IO⟨ l₁ ⟩ t ] (x ∷ xs) ~ (y ∷ ys) = l₁ ⊑ u → [ t ] x ~ y → [ IO⟨ l₁ ⟩ t  ] xs ~ ys
+[ IO⟨ l₁ ⟩ t ] (x ∷ xs) ~ (y ∷ ys) = l₁ ⊑ u → [ t ] x ~ y → [ IO⟨ l₁ ⟩ t ] xs ~ ys
+-- [ t ] x ~ y → [ IO⟨ l₁ ⟩ t  ] xs ~ ys
 [ a ⇒ b ] f ~ g = ∀ {x y : Value a}  → [ a ] x ~ y → [ b ] f x ~ g y
 [ t ] x ~ y = x ≡ y
 
