@@ -67,3 +67,5 @@ noninterference {Γ} (Let_⇐_In_ {a} {l₁} {l₂} term term₁ term₂) e1 e2 
 ... | p | q = λ x →
         noninterference {Γ ,ᶜ a} term₂ (e1 , eval term e1) (e2 , eval term e2) (enveq ,' p)
         (q (⊑-trans (x≤x∨y l₁ l₂) x)) (⊑-trans (y≤x∨y l₁ l₂) x)
+
+noninterference {Γ} (write term) e1 e2 enveq = λ x → (noninterference {Γ} term e1 e2 enveq) x

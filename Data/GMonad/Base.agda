@@ -42,4 +42,4 @@ record GMonad : Set (c l⊔ ℓ₂ l⊔ lsuc v) where
     functor = record {fmap = fmap}
     
     _>>_ : M l₁ A → M l₂ B → M (l₁ ∘ l₂) B 
-    ma >> mb = ma >>= λ a → mb
+    ma >> mb = ma >>= λ a → mb 

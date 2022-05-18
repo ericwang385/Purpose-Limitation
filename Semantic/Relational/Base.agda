@@ -8,13 +8,13 @@ open import Data.GMonad.Base using (GMonad)
 open import Variable J
 open import Context J
 open import Purpose J
-open import Term J
 open import Type J
 
 open import Data.Product using (_×_)
 open import Relation.Binary.PropositionalEquality using (_≡_)
 open import Relation.Binary using (Rel)
 open import Agda.Builtin.Unit
+open import Data.List using (_∷_)
 
 GradedMonad : GMonad {lzero} J
 GradedMonad = record{
@@ -24,10 +24,11 @@ GradedMonad = record{
     sub = λ _ z → z}
 
 open import Eval {lzero} J GradedMonad
-
+open import Term {lzero} J GradedMonad
 
 [_]_~_ : (a : Type) → Rel (Value a) ℓ₂
-[ ⟨ l₁ ⟩ t ] x ~ y = l₁ ⊑ u  → ([ t ] x ~ y)
+[ ⟨ l₁ ⟩ t ] x ~ y = l₁ ⊑ u  → [ t ] x ~ y
+[ IO⟨ l₁ ⟩ t ] (x ∷ xs) ~ (y ∷ ys) = l₁ ⊑ u  → [ t ] x ~ y
 [ a ⇒ b ] f ~ g = ∀ {x y : Value a}  → [ a ] x ~ y → [ b ] f x ~ g y
 [ t ] x ~ y = x ≡ y
 
