@@ -16,25 +16,15 @@ open import Agda.Builtin.Nat using (_+_) renaming (Nat to ℕ)
 open import Agda.Builtin.Bool using () renaming (Bool to 𝔹)
 open import Agda.Builtin.Unit
 open import Data.List
-open import Data.List.Membership.Propositional using (_∈_)
-open import Data.List.Relation.Unary.Any using (Any; here; there)
 
 
-
--- data IOStream (l : Label) (t : Set v) : Set v where
---     []   : IOStream l t
---     _∷ˢ_ : t → IOStream l t → IOStream l t
-
--- IOStream : (l : Label) → Set v → Set v
--- IOStream l t = List t
-
--- Value : Type → Set v
--- Value Nat       = ℕ
--- Value Bool      = 𝔹
--- Value Unit      = ⊤
--- Value (a ⇒ b)   = Value a → Value b
--- Value (⟨ l ⟩ a) = M l (Value a)
--- Value (IO⟨ l ⟩ a) = IOStream l (M l (Value a))
+Value : Type → Set v
+Value Nat       = ℕ
+Value Bool      = 𝔹
+Value Unit      = ⊤
+Value (a ⇒ b)   = Value a → Value b
+Value (⟨ l ⟩ a) = M l (Value a)
+Value (IO⟨ l ⟩ a) = List (M l (Value a))
 
 
 data Env : Ctx → Set v where
@@ -68,4 +58,4 @@ eval (label l x) ρ  = sub ⊥-⊑ᵣ (return (eval x ρ))
 eval (Let a ⇐ ma In mb) ρ = (eval ma ρ) >>= (eval mb (ρ , (eval a ρ))) 
 
 -- eval (read x) ρ = {!   !}
-eval (write x io flow) ρ = sub flow (eval x ρ) ∷ io
+eval (write x io flow) ρ = (sub flow (eval x ρ)) ∷ eval io ρ

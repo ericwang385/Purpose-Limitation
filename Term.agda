@@ -15,22 +15,6 @@ open GMonad G
 
 open import Data.List using (List)
 
-Value : Type → Set v
-
-IOStream : (l : Label) → Type → Set v
-IOStream l a = List (M l (Value a))
-
--- data IOStream (l : Label) : Type → Set v where
---     []    : IOStream l a
---     _∷ˢ_  : (Value a) → IOStream l a → IOStream l a
-
-Value Nat       = ℕ
-Value Bool      = 𝔹
-Value Unit      = ⊤
-Value (a ⇒ b)   = Value a → Value b
-Value (⟨ l ⟩ a) = M l (Value a)
-Value (IO⟨ l ⟩ a) = List (M l (Value a))
-
 infix  4 _⊢_
 data _⊢_ (Γ : Ctx) : Type → Set (c l⊔ ℓ₂ l⊔ v) where
     unit          : Γ ⊢ Unit
@@ -51,4 +35,4 @@ data _⊢_ (Γ : Ctx) : Type → Set (c l⊔ ℓ₂ l⊔ v) where
     Let_⇐_In_     : Γ ⊢ a → Γ ⊢ (⟨ l₁ ⟩ a) → Γ , a ⊢ (a ⇒ ⟨ l₂ ⟩ b) → Γ ⊢ ⟨ l₁ ∘ l₂ ⟩ b 
 
     -- read_      : Γ ⊢ IO⟨ l ⟩ a → Γ  ⊢ ⟨ l ⟩ a 
-    write         : Γ ⊢ ⟨ l₁ ⟩ a → IOStream l₂ a → l₁ ⊑ l₂ → Γ ⊢ IO⟨ l₂ ⟩ a  
+    write         : Γ ⊢ ⟨ l₁ ⟩ a → Γ ⊢ IO⟨ l₂ ⟩ a → l₁ ⊑ l₂ → Γ ⊢ IO⟨ l₂ ⟩ a  

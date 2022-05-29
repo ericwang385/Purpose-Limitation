@@ -41,10 +41,9 @@ GradedMonad = record{
 open import Eval {ℓ₂} J GradedMonad
 open import Term {ℓ₂} J GradedMonad
 
-[_]_~_ : (a : Type) → Rel (Value a) ℓ₂
+[_]_~_ : (t : Type) → Rel (Value t) ℓ₂
 [ ⟨ l₁ ⟩ t ] mx ~ my =  ∀ (a b : l₁ ⊑ u) → [ t ] mx a ~ my b
-[ IO⟨ l₁ ⟩ t ] (x ∷ xs) ~ (y ∷ ys) = ∀ (a b : l₁ ⊑ u) → 
-    [ t ] x a ~ y b → [ IO⟨ l₁ ⟩ t ] xs ~ ys
+[ IO⟨ l₁ ⟩ t ] (x ∷ xs) ~ (y ∷ ys) = ∀ (flow : l₁ ⊑ u) →  _×_ {ℓ₂} {ℓ₂} ([ t ] x flow ~ y flow) ([ IO⟨ l₁ ⟩ t ] xs ~ ys)
 [ a ⇒ b ] f ~ g = ∀ {x y : Value a} → [ a ] x ~ y → [ b ] f x ~ g y
 [ t ] x ~ y = x ≡ y  
 
@@ -52,3 +51,4 @@ open import Term {ℓ₂} J GradedMonad
 ⟨ ∅ ⟩ ea ~ eb  = ⊤
 ⟨ ctx , a ⟩ (ea , va) ~ (eb , vb) = (⟨ ctx ⟩ ea ~ eb) × ([ a ] va ~ vb)
 
+ 
