@@ -58,4 +58,4 @@ eval (label l x) ρ  = sub ⊥-⊑ᵣ (return (eval x ρ))
 eval (Let a ⇐ ma In mb) ρ = (eval ma ρ) >>= (eval mb (ρ , (eval a ρ))) 
 
 -- eval (read x) ρ = {!   !}
-eval (write x io flow) ρ = (sub flow (eval x ρ)) ∷ eval io ρ
+eval (write x io) ρ = (eval x ρ) ∷ eval io ρ

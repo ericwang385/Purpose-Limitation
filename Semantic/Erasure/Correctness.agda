@@ -68,4 +68,4 @@ noninterference {Γ} (Let_⇐_In_ {a} {l₁} {l₂} term term₁ term₂) e1 e2 
 ... | p | q 
     = λ x y → noninterference {Γ ,ᶜ a} term₂ (e1 , eval term e1) (e2 , eval term e2) (enveq ,' p) (q (⊑-trans (x≤x∨y l₁ l₂) x) (⊑-trans (x≤x∨y l₁ l₂) y)) (⊑-trans (y≤x∨y l₁ l₂) x) ((⊑-trans (y≤x∨y l₁ l₂) y))
 
-noninterference {Γ} (write term io flow) e1 e2 enveq = λ x → noninterference {Γ} term e1 e2 enveq (⊑-trans flow x) (⊑-trans flow x) ,' noninterference {Γ} io e1 e2 enveq
+noninterference {Γ} (write term io) e1 e2 enveq = λ x → noninterference {Γ} term e1 e2 enveq x x ,' noninterference {Γ} io e1 e2 enveq
