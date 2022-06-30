@@ -55,7 +55,7 @@ eval (If cond Then e1 Else e2) ρ with (eval cond ρ)
 eval (η x) ρ        = return (eval x ρ)
 eval (flow ↑ x) ρ   = sub flow (eval x ρ)
 eval (label l x) ρ  = sub ⊥-⊑ᵣ (return (eval x ρ))
-eval (Let a ⇐ ma In mb) ρ = (eval ma ρ) >>= (eval mb (ρ , (eval a ρ))) 
+eval (Let⇐ ma In mb) ρ = eval ma ρ >>= λ v → eval mb (ρ , v)
 
--- eval (read x) ρ = {!   !}
 eval (write x io) ρ = (eval x ρ) ∷ eval io ρ
+  

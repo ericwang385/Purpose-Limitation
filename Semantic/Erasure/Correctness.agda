@@ -64,8 +64,13 @@ noninterference {Γ} (flow ↑ term) e1 e2 enveq = λ x y → noninterference {�
 
 noninterference {Γ} (label l term) e1 e2 enveq = λ x y → noninterference {Γ} term e1 e2 enveq
 
-noninterference {Γ} (Let_⇐_In_ {a} {l₁} {l₂} term term₁ term₂) e1 e2 enveq with (noninterference {Γ} term e1 e2 enveq) | (noninterference {Γ} term₁ e1 e2 enveq)
-... | p | q 
-    = λ x y → noninterference {Γ ,ᶜ a} term₂ (e1 , eval term e1) (e2 , eval term e2) (enveq ,' p) (q (⊑-trans (x≤x∨y l₁ l₂) x) (⊑-trans (x≤x∨y l₁ l₂) y)) (⊑-trans (y≤x∨y l₁ l₂) x) ((⊑-trans (y≤x∨y l₁ l₂) y))
+noninterference {Γ} (Let⇐_In_ {l₁} {a} {l₂} term1 term2) e1 e2 enveq with noninterference {Γ} term1 e1 e2 enveq 
+... | p = λ x y → 
+    noninterference {Γ ,ᶜ a} term2 (e1 , eval term1 e1 (flow1 x)) ((e2 , eval term1 e2 ((⊑-trans (x≤x∨y l₁ l₂) y)))) 
+    (enveq ,' p (flow1 x) (flow1 y)) (flow2 x) (flow2 y)
+    where flow1 : {l₁ l₂ u : Label} → l₁ ∘ l₂ ⊑ u → l₁ ⊑ u
+          flow1 {l₁} {l₂} x = (⊑-trans (x≤x∨y l₁ l₂) x)
+          flow2 : {l₁ l₂ u : Label} → l₁ ∘ l₂ ⊑ u → l₂ ⊑ u
+          flow2 {l₁} {l₂} x = (⊑-trans (y≤x∨y l₁ l₂) x)
 
-noninterference {Γ} (write term io) e1 e2 enveq = λ x → noninterference {Γ} term e1 e2 enveq x x ,' noninterference {Γ} io e1 e2 enveq
+noninterference {Γ} (write term io) e1 e2 enveq = λ x → noninterference {Γ} term e1 e2 enveq x x ,' noninterference {Γ} io e1 e2 enveq  

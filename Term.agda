@@ -32,7 +32,6 @@ data _⊢_ (Γ : Ctx) : Type → Set (c l⊔ ℓ₂ l⊔ v) where
     η_            : Γ ⊢ a → Γ ⊢ ⟨ ⊥ ⟩ a  
     _↑_           : l₁ ⊑ l₂ → Γ ⊢ ⟨ l₁ ⟩ a → Γ ⊢ ⟨ l₂ ⟩ a
     label         : (l : Label) → Γ ⊢ a → Γ ⊢ (⟨ l ⟩ a)
-    Let_⇐_In_     : Γ ⊢ a → Γ ⊢ (⟨ l₁ ⟩ a) → Γ , a ⊢ (a ⇒ ⟨ l₂ ⟩ b) → Γ ⊢ ⟨ l₁ ∘ l₂ ⟩ b 
+    Let⇐_In_      : Γ ⊢ (⟨ l₁ ⟩ a) → Γ , a ⊢ ⟨ l₂ ⟩ b → Γ ⊢ ⟨ l₁ ∘ l₂ ⟩ b 
 
-    -- read_      : Γ ⊢ IO⟨ l ⟩ a → Γ  ⊢ ⟨ l ⟩ a 
     write         : Γ ⊢ ⟨ l ⟩ a → Γ ⊢ IO⟨ l ⟩ a → Γ ⊢ IO⟨ l ⟩ a  
